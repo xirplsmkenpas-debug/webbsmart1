@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SMART HOME CONTROL PANEL</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background:#eef5ff;
+    min-height:100vh;
+}
+
+.header{
+    width:100%;
+    background:linear-gradient(90deg,#1d4ed8,#2563eb);
+    color:white;
+    padding:18px 40px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.header h1{
+    text-align:center;
+    font-size:28px;
+    font-weight:700;
+}
+
+.time{
+    margin-top:8px;
+    font-size:14px;
+    text-align:center;
+}
+
+.wrapper{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    padding:40px;
+}
+
+.card{
+    width:420px;
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.card h2{
+    text-align:center;
+    margin-bottom:25px;
+    color:#1e3a8a;
+}
+
+.switch-box{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    padding:15px;
+    background:#f1f5f9;
+    border-radius:12px;
+}
+
+.switch-box span{
+    font-weight:600;
+}
+
+.switch{
+    position:relative;
+    display:inline-block;
+    width:65px;
+    height:34px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    cursor:pointer;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#cbd5e1;
+    transition:.4s;
+    border-radius:50px;
+}
+
+.slider:before{
+    position:absolute;
+    content:"";
+    height:26px;
+    width:26px;
+    left:4px;
+    bottom:4px;
+    background:white;
+    transition:.4s;
+    border-radius:50%;
+}
+
+input:checked + .slider{
+    background:#22c55e;
+}
+
+input:checked + .slider:before{
+    transform:translateX(30px);
+}
+
+input[type="text"],
+input[type="time"],
+select{
+    width:100%;
+    padding:12px;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    margin-top:8px;
+    margin-bottom:18px;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.status{
+    margin-top:20px;
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+}
+
+.on{
+    color:#22c55e;
+}
+
+.off{
+    color:#ef4444;
+}
+
+table{
+    width:100%;
+    margin-top:25px;
+    border-collapse:collapse;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    text-align:center;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.token-box{
+    margin-bottom:20px;
+    background:#f8fafc;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #cbd5e1;
+}
+
+.token-title{
+    margin-bottom:10px;
+    font-weight:700;
+    color:#1e3a8a;
+}
+
+.footer{
+    text-align:center;
+    margin-top:20px;
+    font-size:13px;
+    color:#64748b;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="header">
+
+<h1>
+🏠 SMART HOME CONTROL PANEL
+</h1>
+
+<div class="time" id="jam">
+WAKTU SAAT INI :
+</div>
+
+</div>
+
+<div class="wrapper">
+
+<div class="card">
+
+<h2>LAMPU UTAMA</h2>
+
+<div class="token-box">
+
+<div class="token-title">
+MASUKKAN TOKEN
+</div>
+
+<input 
+type="text" 
+id="token"
+placeholder="Masukkan Auth Token Blynk">
+
+</div>
+
+<div class="switch-box">
+
+<span>HIDUP / MATI</span>
+
+<label class="switch">
+
+<input 
+type="checkbox" 
+id="lampu"
+onclick="kontrolLampu()">
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+<label>Pengaturan Waktu Timer</label>
+
+<select id="timer">
+<option>1 Menit</option>
+<option>5 Menit</option>
+<option>10 Menit</option>
+<option>30 Menit</option>
+</select>
+
+<button onclick="setTimer()">
+SET TIMER
+</button>
+
+<br><br>
+
+<label>Jadwal ON</label>
+<input type="time" id="jamOn">
+
+<label>Jadwal OFF</label>
+<input type="time" id="jamOff">
+
+<button onclick="simpanJadwal()">
+SIMPAN JADWAL
+</button>
+
+<div class="status" id="status">
+Status : OFF
+</div>
+
+<table>
+
+<tr>
+<th>Status</th>
+<th>Waktu</th>
+</tr>
+
+<tbody id="logJadwal">
+
+<tr>
+<td class="on">ON</td>
+<td>11:20:15</td>
+</tr>
+
+<tr>
+<td class="off">OFF</td>
+<td>11:10:05</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="footer">
+ESP8266 + Blynk
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* JAM */
+
+function updateJam(){
+
+let sekarang = new Date();
+
+let jam =
+sekarang.toLocaleTimeString('id-ID');
+
+document.getElementById("jam").innerHTML =
+"WAKTU SAAT INI : " + jam + " WIB";
+
+}
+
+setInterval(updateJam,1000);
+
+
+/* KONTROL LAMPU */
+
+function kontrolLampu(){
+
+let token =
+document.getElementById("token").value.trim();
+
+if(token == ""){
+
+alert("Masukkan token Blynk terlebih dahulu!");
+
+document.getElementById("lampu").checked = false;
+
+return;
+
+}
+
+let nilai =
+document.getElementById("lampu").checked
+? 1
+: 0;
+
+let status =
+nilai == 1
+? "ON"
+: "OFF";
+
+document.getElementById("status").innerHTML =
+"Status : " + status;
+
+/* API BLYNK */
+
+let url =
+"https://blynk.cloud/external/api/update?token="
++ token +
+"&V0="
++ nilai;
+
+/* KIRIM DATA */
+
+fetch(url)
+
+.then(response => {
+
+if(response.ok){
+
+console.log("Berhasil connect ke Blynk");
+
+}else{
+
+alert("Gagal connect ke Blynk");
+
+}
+
+})
+
+.catch(error => {
+
+console.log(error);
+
+alert("Terjadi error koneksi");
+
+});
+
+}
+
+        /* TIMER */
+
+function setTimer(){
+
+    let pilihan =
+    document.getElementById("timer").value;
+
+    let menit = 1;
+
+    if(pilihan === "5 Menit") menit = 5;
+    if(pilihan === "10 Menit") menit = 10;
+    if(pilihan === "30 Menit") menit = 30;
+
+    let token =
+    document.getElementById("token").value.trim();
+
+    if(token === ""){
+        alert("Masukkan Token Blynk terlebih dahulu!");
+        return;
+    }
+
+    // Lampu ON
+    document.getElementById("lampu").checked = true;
+    document.getElementById("status").innerHTML =
+    "Status : ON";
+
+    fetch(
+        "https://blynk.cloud/external/api/update?token="
+        + token +
+        "&V0=1"
+    );
+
+    alert("Lampu menyala selama " + menit + " menit");
+
+    // OFF otomatis
+    setTimeout(function(){
+
+        document.getElementById("lampu").checked = false;
+
+        document.getElementById("status").innerHTML =
+        "Status : OFF";
+
+        fetch(
+            "https://blynk.cloud/external/api/update?token="
+            + token +
+            "&V0=0"
+        );
+
+        alert("Timer selesai, lampu dimatikan");
+
+    }, menit * 60000);
+
+}
+
+
+        /* JADWAL */
+
+let jadwalAktif = false;
+
+function simpanJadwal() {
+
+    let on = document.getElementById("jamOn").value;
+    let off = document.getElementById("jamOff").value;
+
+    if (on === "" || off === "") {
+        alert("Isi jadwal ON dan OFF terlebih dahulu!");
+        return;
+    }
+
+    jadwalAktif = true;
+
+    let tabel = document.getElementById("logJadwal");
+
+    tabel.innerHTML += `
+        <tr>
+            <td class="on">Jadwal ON</td>
+            <td>${on}</td>
+        </tr>
+        <tr>
+            <td class="off">Jadwal OFF</td>
+            <td>${off}</td>
+        </tr>
+    `;
+
+    alert("Jadwal berhasil disimpan");
+}
+
+
+        /* CEK JADWAL OTOMATIS */
+
+setInterval(function () {
+
+    if (!jadwalAktif) return;
+
+    let sekarang = new Date();
+
+    let waktu =
+        String(sekarang.getHours()).padStart(2, "0") +
+        ":" +
+        String(sekarang.getMinutes()).padStart(2, "0");
+
+    let on = document.getElementById("jamOn").value;
+    let off = document.getElementById("jamOff").value;
+    let token = document.getElementById("token").value.trim();
+
+    if (waktu === on) {
+
+        document.getElementById("lampu").checked = true;
+        document.getElementById("status").innerHTML = "Status : ON";
+
+        if (token !== "") {
+            fetch(
+                "https://blynk.cloud/external/api/update?token=" +
+                token +
+                "&V0=1"
+            );
+        }
+    }
+
+    if (waktu === off) {
+
+        document.getElementById("lampu").checked = false;
+        document.getElementById("status").innerHTML = "Status : OFF";
+
+        if (token !== "") {
+            fetch(
+                "https://blynk.cloud/external/api/update?token=" +
+                token +
+                "&V0=0"
+            );
+        }
+    }
+}, 1000);
+
+</script>
+
+</body>
+</html>
